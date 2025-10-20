@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UniversityAPI.Data;
+using UniversityAPI.Repositories;
 
 namespace UniversityAPI
 {
@@ -18,6 +19,13 @@ namespace UniversityAPI
 
             builder.Services.AddDbContext<UniDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("UniversityAPIConnectionString")));
+
+            builder.Services.AddScoped<IUniversityRepository, SqlUniversityRepository>();
+
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<UniversityAPI.Mappings.AutoMapperProfiles>();
+            });
 
             var app = builder.Build();
 
