@@ -38,6 +38,7 @@ namespace UniversityAPI.Controllers
         // Action method to get a university by ID
         // GET: api/Universities/{id}
         [HttpGet]
+        [Route("{id:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var existingUniversity = await universityRepository.GetByIdAsync(id);
