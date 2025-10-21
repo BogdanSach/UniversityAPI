@@ -36,7 +36,7 @@ namespace UniversityAPI.Controllers
         }
 
         // Action method to get a university by ID
-        // GET: api/Universities
+        // GET: api/Universities/{id}
         [HttpGet]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
