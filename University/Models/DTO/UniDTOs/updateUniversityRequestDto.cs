@@ -2,7 +2,7 @@
 
 namespace UniversityAPI.Models.DTO.UniDTOs
 {
-    public class updateUniversityRequestDto
+    public class UpdateUniversityRequestDto
     {
         [Required]
         public string Name { get; set; }

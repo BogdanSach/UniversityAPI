@@ -15,9 +15,9 @@ namespace UniversityAPI.Controllers
     {
         private readonly UniDbContext uniDbContext;
         private readonly IUniversityRepository universityRepository;
-        private readonly Mapper mapper;
+        private readonly IMapper mapper;
 
-        public UniversitiesController(UniDbContext uniDbContext, IUniversityRepository universityRepository, Mapper mapper)
+        public UniversitiesController(UniDbContext uniDbContext, IUniversityRepository universityRepository, IMapper mapper)
         {
             this.uniDbContext = uniDbContext;
             this.universityRepository = universityRepository;
@@ -61,13 +61,14 @@ namespace UniversityAPI.Controllers
             await uniDbContext.SaveChangesAsync();
 
             var universityDto = mapper.Map<UniversityDto>(universityDomainModel);
-            return CreatedAtAction(nameof(GetById), new { id = universityDto.Id }, universityDto);
+            return CreatedAtAction(nameof(GetById), new { id = universityDomainModel.Id }, universityDto);
         }
 
         // Action method to update an existing university
         // PUT: api/Universities/{id}
         [HttpPut]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] updateUniversityRequestDto updateUniversityRequestDto)
+        [Route("{id:guid}")]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateUniversityRequestDto updateUniversityRequestDto)
         {
             var universityDomainModel = mapper.Map<University>(updateUniversityRequestDto);
 
@@ -76,10 +77,10 @@ namespace UniversityAPI.Controllers
             {
                 return NotFound();
             }
-            universityDomainModel.Name = updateUniversityRequestDto.Name;
-            universityDomainModel.Address = updateUniversityRequestDto.Address;
-            universityDomainModel.Url = updateUniversityRequestDto.Url;
-            universityDomainModel.Description = updateUniversityRequestDto.Description;
+            //universityDomainModel.Name = updateUniversityRequestDto.Name;
+            //universityDomainModel.Address = updateUniversityRequestDto.Address;
+            //universityDomainModel.Url = updateUniversityRequestDto.Url;
+            //universityDomainModel.Description = updateUniversityRequestDto.Description;
 
             await uniDbContext.SaveChangesAsync();
 
@@ -91,6 +92,7 @@ namespace UniversityAPI.Controllers
         // Action method to delete a university
         // DELETE: api/Universities/{id}
         [HttpDelete]
+        [Route("{id:guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var universityDomainModel = await universityRepository.DeleteAsync(id);
