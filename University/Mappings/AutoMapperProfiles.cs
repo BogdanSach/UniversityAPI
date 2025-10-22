@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using UniversityAPI.Models.Domain;
 using UniversityAPI.Models.DTO;
+using UniversityAPI.Models.DTO.UniDTOs;
 
 namespace UniversityAPI.Mappings
 {
@@ -9,7 +10,10 @@ namespace UniversityAPI.Mappings
         public AutoMapperProfiles()
         {
             CreateMap<University, UniversityDto>().ReverseMap();
-            
+            CreateMap<AddUniversityRequestDto, University>().ReverseMap();
+            CreateMap<UpdateUniversityRequestDto, University>().ReverseMap();
+
+
         }
     }
 }
