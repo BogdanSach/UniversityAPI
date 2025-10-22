@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversityAPI.Data;
 
@@ -11,9 +12,11 @@ using UniversityAPI.Data;
 namespace UniversityAPI.Migrations
 {
     [DbContext(typeof(UniDbContext))]
-    partial class UniDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251021131001_Added Description Column")]
+    partial class AddedDescriptionColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
