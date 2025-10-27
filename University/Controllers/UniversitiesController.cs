@@ -50,6 +50,7 @@ namespace UniversityAPI.Controllers
             var universityDto = mapper.Map<UniversityDto>(existingUniversity);
             return Ok(universityDto);
         }
+
         // Action method to create a new university
         // POST: api/Universities
         [HttpPost]
@@ -58,7 +59,6 @@ namespace UniversityAPI.Controllers
             var universityDomainModel = mapper.Map<University>(addUniversityRequestDto);
 
             universityDomainModel = await universityRepository.CreateAsync(universityDomainModel);
-            await uniDbContext.SaveChangesAsync();
 
             var universityDto = mapper.Map<UniversityDto>(universityDomainModel);
             return CreatedAtAction(nameof(GetById), new { id = universityDomainModel.Id }, universityDto);
@@ -77,12 +77,7 @@ namespace UniversityAPI.Controllers
             {
                 return NotFound();
             }
-            //universityDomainModel.Name = updateUniversityRequestDto.Name;
-            //universityDomainModel.Address = updateUniversityRequestDto.Address;
-            //universityDomainModel.Url = updateUniversityRequestDto.Url;
-            //universityDomainModel.Description = updateUniversityRequestDto.Description;
 
-            await uniDbContext.SaveChangesAsync();
 
             var universityDto = mapper.Map<UniversityDto>(universityDomainModel);
             return Ok(universityDto);
