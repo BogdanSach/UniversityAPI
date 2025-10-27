@@ -34,24 +34,38 @@ namespace UniversityAPI.Repositories
 
         public async Task<IEnumerable<University>> GetAllAsync()
         {
-            return await dbContext.Universities.ToListAsync();
+            var universities = await dbContext.Universities
+                .Include(u => u.Location)
+                .ToListAsync();
+            return universities;
         }
 
         public async Task<University?> GetByIdAsync(Guid id)
         {
-            return await dbContext.Universities.FirstOrDefaultAsync(x => x.Id == id);
+            var university = await dbContext.Universities
+                .Include(u => u.Location)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return university;
         }
 
         public async Task<University?> UpdateAsync(Guid id, University university)
         {
-            var existingUniversity = await dbContext.Universities.FirstOrDefaultAsync(x => x.Id == id);
+            var existingUniversity = await dbContext.Universities.Include(u => u.Location).FirstOrDefaultAsync(x => x.Id == id);
             if (existingUniversity == null)
             {
                 return null;
             }
             existingUniversity.Name = university.Name;
-            existingUniversity.Address = university.Address;
             existingUniversity.Url = university.Url;
+            existingUniversity.Description = university.Description;
+
+            if (existingUniversity.Location != null && university.Location != null)
+            {
+                existingUniversity.Location.City = university.Location.City;
+                existingUniversity.Location.Region = university.Location.Region;
+                existingUniversity.Location.Street = university.Location.Street;
+                existingUniversity.Location.Number = university.Location.Number;
+            }
 
             await dbContext.SaveChangesAsync();
             return existingUniversity;
