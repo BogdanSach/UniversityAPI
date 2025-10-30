@@ -47,6 +47,16 @@ namespace UniversityAPI.Repositories.DormRepos
 
             return dorm;
         }
+        
+        public async Task<IEnumerable<Dorm>> GetByUniversityIdAsync(Guid universityId)
+        {
+            return await dbContext.Dorms
+                .Where(d => d.UniversityId == universityId)
+                .Include(d => d.Location)
+                .Include(d => d.DormType)
+                .ToListAsync();
+        }
+
 
         public async Task<Dorm?> UpdateAsync(Guid id, Dorm dorm)
         {
