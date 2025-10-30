@@ -6,6 +6,8 @@ using UniversityAPI.Models.Domain;
 using UniversityAPI.Models.DTO;
 using AutoMapper;
 using UniversityAPI.Models.DTO.UniDTOs;
+using UniversityAPI.Models.DTO.DormDTOs;
+using UniversityAPI.Repositories.DormRepos;
 
 namespace UniversityAPI.Controllers
 {
@@ -16,12 +18,14 @@ namespace UniversityAPI.Controllers
         private readonly UniDbContext uniDbContext;
         private readonly IUniversityRepository universityRepository;
         private readonly IMapper mapper;
+        private readonly IDormRepository dormRepository;
 
-        public UniversitiesController(UniDbContext uniDbContext, IUniversityRepository universityRepository, IMapper mapper)
+        public UniversitiesController(UniDbContext uniDbContext, IUniversityRepository universityRepository, IMapper mapper, IDormRepository dormRepository)
         {
             this.uniDbContext = uniDbContext;
             this.universityRepository = universityRepository;
             this.mapper = mapper;
+            this.dormRepository = dormRepository;
         }
 
         // Action method to get all universities
@@ -49,6 +53,23 @@ namespace UniversityAPI.Controllers
 
             var universityDto = mapper.Map<UniversityDto>(existingUniversity);
             return Ok(universityDto);
+        }
+
+        // Actions method to get list of dorms for specific university
+        // GET api/Universities/{id}/Dorms
+        [HttpGet]
+        [Route("{id:guid}/Dorms")]
+        public async Task<ActionResult<List<DormDto>>> GetDormsForUniversity([FromRoute] Guid id)
+        {
+            var dormDomain = await dormRepository.GetByUniversityIdAsync(id);
+
+            if (dormDomain  == null || !dormDomain.Any())
+            {
+                return NotFound();
+            }
+
+            var dormDto = mapper.Map<List<DormDto>>(dormDomain);
+            return Ok(dormDto);
         }
 
         // Action method to create a new university
