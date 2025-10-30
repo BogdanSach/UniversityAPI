@@ -12,7 +12,7 @@
         // Navigation properties
         public Guid UniversityId { get; set; }//FK
         public University University { get; set; }
-        public Guid DormtypeId { get; set; }//FK
+        public Guid DormTypeId { get; set; }//FK
         public DormType DormType { get; set; }
 
     }
