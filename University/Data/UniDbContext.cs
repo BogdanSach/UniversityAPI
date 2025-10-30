@@ -62,7 +62,7 @@ namespace UniversityAPI.Data
             modelBuilder.Entity<Dorm>()
                 .HasOne(d => d.DormType)
                 .WithMany(dt => dt.Dorms)
-                .HasForeignKey(d => d.DormtypeId)
+                .HasForeignKey(d => d.DormTypeId)
                 .IsRequired();
 
             // Seed Data for DormTypes
