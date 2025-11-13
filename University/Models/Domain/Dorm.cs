@@ -3,6 +3,7 @@
     public class Dorm
     {
         public Guid Id { get; set; } //PK
+        public int Number { get; set; }
         public decimal PriceOfLiving { get; set; }
         public int Capacity { get; set; }
 
