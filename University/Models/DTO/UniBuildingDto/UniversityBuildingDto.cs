@@ -10,5 +10,6 @@ namespace UniversityAPI.Models.DTO.UniBuildingDto
         public LocationDto Location { get; set; }
         // Navigation properties
         public Guid UniversityId { get; set; }
+        public string UniversityName { get; set; }
     }
 }
