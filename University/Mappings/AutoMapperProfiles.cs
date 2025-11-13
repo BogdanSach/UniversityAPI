@@ -24,6 +24,7 @@ namespace UniversityAPI.Mappings
             //Dorm
             CreateMap<Dorm, DormDto>()
                 .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Name))
                 .ReverseMap();
             CreateMap<DormType, DormTypeDto>().ReverseMap();
             CreateMap<AddDormRequestDto, Dorm>().ReverseMap();
@@ -33,6 +34,7 @@ namespace UniversityAPI.Mappings
             //University Building
             CreateMap<UniversityBuilding, UniversityBuildingDto>()
                 .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.UniversityName, opt => opt.MapFrom(src => src.University.Name))
                 .ReverseMap();
             CreateMap<AddUniversityBuildingRequestDto, UniversityBuilding>().ReverseMap();
             CreateMap<UpdateUniversityBuildingRequestDto, UniversityBuilding>().ReverseMap();
