@@ -3,6 +3,7 @@ using UniversityAPI.Models.Domain;
 using UniversityAPI.Models.DTO;
 using UniversityAPI.Models.DTO.UniDTOs;
 using UniversityAPI.Models.DTO.DormDTOs;
+using UniversityAPI.Models.DTO.UniBuildingDto;
 
 namespace UniversityAPI.Mappings
 {
@@ -22,15 +23,19 @@ namespace UniversityAPI.Mappings
 
             //Dorm
             CreateMap<Dorm, DormDto>()
-                .ForMember(dest => dest.LocationDto, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
                 .ReverseMap();
             CreateMap<DormType, DormTypeDto>().ReverseMap();
+            CreateMap<AddDormRequestDto, Dorm>().ReverseMap();
+            CreateMap<UpdateDormRequestDto, Dorm>().ReverseMap();
 
 
             //University Building
             CreateMap<UniversityBuilding, UniversityBuildingDto>()
-                .ForMember(dest => dest.LocationDto, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
                 .ReverseMap();
+            CreateMap<AddUniversityBuildingRequestDto, UniversityBuilding>().ReverseMap();
+            CreateMap<UpdateUniversityBuildingRequestDto, UniversityBuilding>().ReverseMap();
 
 
             //Location
