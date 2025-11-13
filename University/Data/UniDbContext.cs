@@ -12,24 +12,31 @@ namespace UniversityAPI.Data
         public DbSet<University> Universities { get; set; }
         public DbSet<Dorm> Dorms { get; set; }
         public DbSet<DormType> DormTypes { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<UniversityBuilding> UniversityBuildings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Dorm>()
+            .Property(d => d.PriceOfLiving)
+            .HasPrecision(18, 2);
+
             // ---One-to-One---
             // University - location
             modelBuilder.Entity<University>()
                 .HasOne(u => u.Location)
-                .WithOne()
+                .WithOne(l => l.University)
                 .HasForeignKey<University>(u => u.LocationId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+
             // Dorm - location
             modelBuilder.Entity<Dorm>()
                 .HasOne(d => d.Location)
-                .WithOne()
+                .WithOne(l => l.Dorm)
                 .HasForeignKey<Dorm>(d => d.LocationId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
@@ -37,7 +44,7 @@ namespace UniversityAPI.Data
             // UniversityBuilding - location
             modelBuilder.Entity<UniversityBuilding>()
                 .HasOne(ub => ub.Location)
-                .WithOne()
+                .WithOne(l => l.UniversityBuilding)
                 .HasForeignKey<UniversityBuilding>(ub => ub.LocationId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
@@ -68,8 +75,8 @@ namespace UniversityAPI.Data
             // Seed Data for DormTypes
             var dormTypes = new List<DormType>()
             {
-                new DormType() { Id = Guid.Parse("8d7ed0fe-900f-4780-80e6-12fd2f0ec4a4"), TypeName = "Corridor" },
-                new DormType() { Id = Guid.Parse("c0281486-d9ec-4bf8-8164-3cce39241d0a"), TypeName = "Block" },
+                new DormType() { Id = Guid.Parse("8d7ed0fe-900f-4780-80e6-12fd2f0ec4a4"), TypeName = "corridor" },
+                new DormType() { Id = Guid.Parse("c0281486-d9ec-4bf8-8164-3cce39241d0a"), TypeName = "block" },
             };
 
             modelBuilder.Entity<DormType>().HasData(dormTypes);
