@@ -39,6 +39,7 @@ namespace UniversityAPI.Repositories.UniBuildingRepos
         {
             var uniBuildings = await dbContext.UniversityBuildings
                 .Include(ub =>  ub.Location)
+                .Include(ub => ub.University)
                 .ToListAsync();
             return uniBuildings;
         }
@@ -47,6 +48,7 @@ namespace UniversityAPI.Repositories.UniBuildingRepos
         {
             var universityBuilding = await dbContext.UniversityBuildings
                 .Include(ub => ub.Location)
+                .Include(ub => ub.University)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return universityBuilding;
