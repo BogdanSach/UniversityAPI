@@ -15,39 +15,50 @@ namespace UniversityAPI.Repositories.DormRepos
 
         public async Task<Dorm> CreateAsync(Dorm dorm)
         {
+            await dbContext.Locations.AddAsync(dorm.Location);
+
             await dbContext.Dorms.AddAsync(dorm);
             await dbContext.SaveChangesAsync();
 
             return dorm;
         }
-
-        public async Task<Dorm?> DeleteAsync(Guid id)
+        public async Task<Dorm?> DeleteAsync(Guid universityId, Guid id)
         {
-            var existingDorm = await dbContext.Dorms.FirstOrDefaultAsync(x => x.Id == id);
-            if (existingDorm != null) { return null; }
+            var existingDorm = await dbContext.Dorms.FirstOrDefaultAsync(x => x.Id == id && x.UniversityId == universityId);
+            if (existingDorm == null) { return null; }
 
             dbContext.Dorms.Remove(existingDorm);
             await dbContext.SaveChangesAsync();
             return existingDorm;
         }
-
         public async Task<IEnumerable<Dorm>> GetAllAsync()
         {
             var dorms = await dbContext.Dorms
                 .Include(d => d.Location)
+                .Include(d => d.DormType)
+                .Include(d => d.University)
                 .ToListAsync();
             return dorms;
         }
-
         public async Task<Dorm?> GetByIdAsync(Guid id)
         {
             var dorm = await dbContext.Dorms
                 .Include (d => d.Location)
+                .Include(d => d.DormType)
+                .Include(d => d.University)
                 .FirstOrDefaultAsync(x =>x.Id == id);
 
             return dorm;
         }
-        
+        public async Task<Dorm?> GetByIdForUniAsync(Guid universityId, Guid id)
+        {
+            var dorm = await dbContext.Dorms
+                .Include(d => d.Location)
+                .Include(d => d.DormType)
+                .FirstOrDefaultAsync(d => d.UniversityId == universityId && d.Id == id);
+
+            return dorm;
+        }
         public async Task<IEnumerable<Dorm>> GetByUniversityIdAsync(Guid universityId)
         {
             return await dbContext.Dorms
@@ -56,9 +67,7 @@ namespace UniversityAPI.Repositories.DormRepos
                 .Include(d => d.DormType)
                 .ToListAsync();
         }
-
-
-        public async Task<Dorm?> UpdateAsync(Guid id, Dorm dorm)
+        public async Task<Dorm?> UpdateAsync(Guid universityId, Guid id, Dorm dorm)
         {
             var existingDorm = await dbContext.Dorms
                 .Include(d => d.Location)
@@ -66,6 +75,7 @@ namespace UniversityAPI.Repositories.DormRepos
 
             if (existingDorm == null) { return null; }
 
+            existingDorm.Number = dorm.Number;
             existingDorm.PriceOfLiving = dorm.PriceOfLiving;
             existingDorm.Capacity = dorm.Capacity;
             existingDorm.DormTypeId = dorm.DormTypeId;
