@@ -7,6 +7,5 @@ namespace UniversityAPI.Models.DTO.DormDTOs
         public Guid Id { get; set; }
         public string TypeName { get; set; }
 
-        public ICollection<Dorm> Dorms { get; set; }
     }
 }
