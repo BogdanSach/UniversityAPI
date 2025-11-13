@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 using UniversityAPI.Data;
 using UniversityAPI.Repositories;
+using UniversityAPI.Repositories.DormRepos;
+using UniversityAPI.Repositories.UniBuildingRepos;
 
 namespace UniversityAPI
 {
@@ -22,6 +24,8 @@ namespace UniversityAPI
             options.UseSqlServer(builder.Configuration.GetConnectionString("UniversityAPIConnectionString")));
 
             builder.Services.AddScoped<IUniversityRepository, SqlUniversityRepository>();
+            builder.Services.AddScoped<IDormRepository, SqlDormRepository>();
+            builder.Services.AddScoped<IUniversityBuildingRepository, SqlUniversityBuildingRepository>();
 
             builder.Services.AddAutoMapper(cfg =>
             {
