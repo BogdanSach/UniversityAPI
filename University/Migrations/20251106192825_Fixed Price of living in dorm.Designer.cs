@@ -12,8 +12,8 @@ using UniversityAPI.Data;
 namespace UniversityAPI.Migrations
 {
     [DbContext(typeof(UniDbContext))]
-    [Migration("20251027193358_Initial")]
-    partial class Initial
+    [Migration("20251106192825_Fixed Price of living in dorm")]
+    partial class FixedPriceoflivingindorm
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,16 +34,17 @@ namespace UniversityAPI.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("DormtypeId")
+                    b.Property<Guid>("DormTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LocationId1")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("PriceOfLiving")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UniversityId")
@@ -51,14 +52,10 @@ namespace UniversityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DormtypeId");
+                    b.HasIndex("DormTypeId");
 
                     b.HasIndex("LocationId")
                         .IsUnique();
-
-                    b.HasIndex("LocationId1")
-                        .IsUnique()
-                        .HasFilter("[LocationId1] IS NOT NULL");
 
                     b.HasIndex("UniversityId");
 
@@ -83,12 +80,12 @@ namespace UniversityAPI.Migrations
                         new
                         {
                             Id = new Guid("8d7ed0fe-900f-4780-80e6-12fd2f0ec4a4"),
-                            TypeName = "Corridor"
+                            TypeName = "corridor"
                         },
                         new
                         {
                             Id = new Guid("c0281486-d9ec-4bf8-8164-3cce39241d0a"),
-                            TypeName = "Block"
+                            TypeName = "block"
                         });
                 });
 
@@ -115,7 +112,7 @@ namespace UniversityAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("UniversityAPI.Models.Domain.University", b =>
@@ -128,9 +125,6 @@ namespace UniversityAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("LocationId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -146,10 +140,6 @@ namespace UniversityAPI.Migrations
                     b.HasIndex("LocationId")
                         .IsUnique();
 
-                    b.HasIndex("LocationId1")
-                        .IsUnique()
-                        .HasFilter("[LocationId1] IS NOT NULL");
-
                     b.ToTable("Universities");
                 });
 
@@ -160,9 +150,6 @@ namespace UniversityAPI.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("LocationId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Number")
@@ -176,32 +163,24 @@ namespace UniversityAPI.Migrations
                     b.HasIndex("LocationId")
                         .IsUnique();
 
-                    b.HasIndex("LocationId1")
-                        .IsUnique()
-                        .HasFilter("[LocationId1] IS NOT NULL");
-
                     b.HasIndex("UniversityId");
 
-                    b.ToTable("UniversityBuilding");
+                    b.ToTable("UniversityBuildings");
                 });
 
             modelBuilder.Entity("UniversityAPI.Models.Domain.Dorm", b =>
                 {
                     b.HasOne("UniversityAPI.Models.Domain.DormType", "DormType")
                         .WithMany("Dorms")
-                        .HasForeignKey("DormtypeId")
+                        .HasForeignKey("DormTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("UniversityAPI.Models.Domain.Location", "Location")
-                        .WithOne()
+                        .WithOne("Dorm")
                         .HasForeignKey("UniversityAPI.Models.Domain.Dorm", "LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("UniversityAPI.Models.Domain.Location", null)
-                        .WithOne("Dorm")
-                        .HasForeignKey("UniversityAPI.Models.Domain.Dorm", "LocationId1");
 
                     b.HasOne("UniversityAPI.Models.Domain.University", "University")
                         .WithMany("Dorms")
@@ -219,14 +198,10 @@ namespace UniversityAPI.Migrations
             modelBuilder.Entity("UniversityAPI.Models.Domain.University", b =>
                 {
                     b.HasOne("UniversityAPI.Models.Domain.Location", "Location")
-                        .WithOne()
+                        .WithOne("University")
                         .HasForeignKey("UniversityAPI.Models.Domain.University", "LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("UniversityAPI.Models.Domain.Location", null)
-                        .WithOne("University")
-                        .HasForeignKey("UniversityAPI.Models.Domain.University", "LocationId1");
 
                     b.Navigation("Location");
                 });
@@ -234,14 +209,10 @@ namespace UniversityAPI.Migrations
             modelBuilder.Entity("UniversityAPI.Models.Domain.UniversityBuilding", b =>
                 {
                     b.HasOne("UniversityAPI.Models.Domain.Location", "Location")
-                        .WithOne()
+                        .WithOne("UniversityBuilding")
                         .HasForeignKey("UniversityAPI.Models.Domain.UniversityBuilding", "LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("UniversityAPI.Models.Domain.Location", null)
-                        .WithOne("UniversityBuilding")
-                        .HasForeignKey("UniversityAPI.Models.Domain.UniversityBuilding", "LocationId1");
 
                     b.HasOne("UniversityAPI.Models.Domain.University", "University")
                         .WithMany("UniversityBuildings")

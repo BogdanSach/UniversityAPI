@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UniversityAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class NewInitialSetup : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,7 +26,7 @@ namespace UniversityAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "Locations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -37,7 +37,7 @@ namespace UniversityAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -48,23 +48,17 @@ namespace UniversityAPI.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LocationId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Universities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Universities_Location_LocationId",
+                        name: "FK_Universities_Locations_LocationId",
                         column: x => x.LocationId,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Universities_Location_LocationId1",
-                        column: x => x.LocationId1,
-                        principalTable: "Location",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -72,33 +66,28 @@ namespace UniversityAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Number = table.Column<int>(type: "int", nullable: false),
                     PriceOfLiving = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DormtypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LocationId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    DormTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Dorms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Dorms_DormTypes_DormtypeId",
-                        column: x => x.DormtypeId,
+                        name: "FK_Dorms_DormTypes_DormTypeId",
+                        column: x => x.DormTypeId,
                         principalTable: "DormTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Dorms_Location_LocationId",
+                        name: "FK_Dorms_Locations_LocationId",
                         column: x => x.LocationId,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Dorms_Location_LocationId1",
-                        column: x => x.LocationId1,
-                        principalTable: "Location",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Dorms_Universities_UniversityId",
                         column: x => x.UniversityId,
@@ -108,31 +97,25 @@ namespace UniversityAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UniversityBuilding",
+                name: "UniversityBuildings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
                     LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LocationId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    UniversityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UniversityBuilding", x => x.Id);
+                    table.PrimaryKey("PK_UniversityBuildings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UniversityBuilding_Location_LocationId",
+                        name: "FK_UniversityBuildings_Locations_LocationId",
                         column: x => x.LocationId,
-                        principalTable: "Location",
+                        principalTable: "Locations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UniversityBuilding_Location_LocationId1",
-                        column: x => x.LocationId1,
-                        principalTable: "Location",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UniversityBuilding_Universities_UniversityId",
+                        name: "FK_UniversityBuildings_Universities_UniversityId",
                         column: x => x.UniversityId,
                         principalTable: "Universities",
                         principalColumn: "Id",
@@ -144,27 +127,20 @@ namespace UniversityAPI.Migrations
                 columns: new[] { "Id", "TypeName" },
                 values: new object[,]
                 {
-                    { new Guid("8d7ed0fe-900f-4780-80e6-12fd2f0ec4a4"), "Corridor" },
-                    { new Guid("c0281486-d9ec-4bf8-8164-3cce39241d0a"), "Block" }
+                    { new Guid("8d7ed0fe-900f-4780-80e6-12fd2f0ec4a4"), "corridor" },
+                    { new Guid("c0281486-d9ec-4bf8-8164-3cce39241d0a"), "block" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dorms_DormtypeId",
+                name: "IX_Dorms_DormTypeId",
                 table: "Dorms",
-                column: "DormtypeId");
+                column: "DormTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dorms_LocationId",
                 table: "Dorms",
                 column: "LocationId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Dorms_LocationId1",
-                table: "Dorms",
-                column: "LocationId1",
-                unique: true,
-                filter: "[LocationId1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dorms_UniversityId",
@@ -178,28 +154,14 @@ namespace UniversityAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Universities_LocationId1",
-                table: "Universities",
-                column: "LocationId1",
-                unique: true,
-                filter: "[LocationId1] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UniversityBuilding_LocationId",
-                table: "UniversityBuilding",
+                name: "IX_UniversityBuildings_LocationId",
+                table: "UniversityBuildings",
                 column: "LocationId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UniversityBuilding_LocationId1",
-                table: "UniversityBuilding",
-                column: "LocationId1",
-                unique: true,
-                filter: "[LocationId1] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UniversityBuilding_UniversityId",
-                table: "UniversityBuilding",
+                name: "IX_UniversityBuildings_UniversityId",
+                table: "UniversityBuildings",
                 column: "UniversityId");
         }
 
@@ -210,7 +172,7 @@ namespace UniversityAPI.Migrations
                 name: "Dorms");
 
             migrationBuilder.DropTable(
-                name: "UniversityBuilding");
+                name: "UniversityBuildings");
 
             migrationBuilder.DropTable(
                 name: "DormTypes");
@@ -219,7 +181,7 @@ namespace UniversityAPI.Migrations
                 name: "Universities");
 
             migrationBuilder.DropTable(
-                name: "Location");
+                name: "Locations");
         }
     }
 }
